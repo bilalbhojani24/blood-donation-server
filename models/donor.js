@@ -1,53 +1,61 @@
 import mongoose from "mongoose";
-const UserSchema = mongoose.Schema({
+
+const DonorSchema = mongoose.Schema({
   id: {
     type: String,
+    trim: true,
   },
   createdAt: {
     type: Date,
     required: true,
     default: new Date().toISOString(),
+    trim: true,
   },
   updatedAt: {
     type: Date,
     required: true,
     default: new Date().toISOString(),
+    trim: true,
   },
-  name: {
+  donorName: {
     type: String,
     required: true,
+    trim: true,
   },
   mobile: {
     type: Number,
     required: true,
+    trim: true,
   },
   email: {
     type: String,
     required: true,
     trim: true,
   },
-  password: {
-    type: String,
-    required: true,
-  },
-  role: {
-    type: String,
-    required: true,
-  },
   bloodGroup: {
     type: String,
     required: true,
+    trim: true,
   },
-  isVerified: {
-    type: Boolean,
-    default: false,
-  },
-  resetToken: {
+  state: {
     type: String,
+    required: true,
+    trim: true,
   },
-  resetTokenExpiration: {
-    type: Date,
+  district: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
   },
 });
 
-export default mongoose.model("User", UserSchema);
+export default mongoose.model("Donor", DonorSchema);
