@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const DonorSchema = mongoose.Schema({
+const ReceiverSchema = mongoose.Schema({
   id: {
     type: String,
     trim: true,
@@ -16,12 +16,22 @@ const DonorSchema = mongoose.Schema({
     default: new Date().toISOString(),
     trim: true,
   },
-  donorName: {
+  receiverName: {
     type: String,
     required: true,
     trim: true,
   },
   mobile: {
+    type: Number,
+    required: true,
+    trim: true,
+  },
+  contactPersonName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  alternateMobile: {
     type: Number,
     required: true,
     trim: true,
@@ -52,4 +62,4 @@ const DonorSchema = mongoose.Schema({
   },
 });
 
-export default mongoose.model("Donor", DonorSchema);
+export default mongoose.model("Receiver", ReceiverSchema);

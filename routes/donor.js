@@ -4,15 +4,16 @@ import {
   updateDonor,
   getDonors,
   updateDonorStatus,
-  singleDonor,
+  userDonations,
 } from "../controllers/donor.js";
 import auth from "../middleware/auth.js";
 const router = express.Router();
+import { validateCreateDonor } from "../dto/donor.dto.js";
 
-router.post("/create", auth, createDonor);
-router.put("/update/:donorId", auth, updateDonor);
+router.post("/create", auth, validateCreateDonor, createDonor);
+router.put("/update/:donorId", auth, validateCreateDonor, updateDonor);
 router.put("/update-status/:donorId", auth, updateDonorStatus);
-router.get("/user", auth, singleDonor);
+router.get("/user-donation", auth, userDonations);
 router.get("/", getDonors);
 
 export default router;

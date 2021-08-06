@@ -1,19 +1,11 @@
 import User from "../models/user.js";
-import { signupEmailAndMobileValidator } from "../utils/helpers.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { bloodGroupEnum } from "../utils/constants.js";
 
 export const signup = async (req, res) => {
   try {
     const { name, email, mobile, password, bloodGroup } = req.body;
     const error = [];
-
-    // validate email and mobile
-    const checkError = signupEmailAndMobileValidator(password, mobile);
-    if (checkError.length > 0) {
-      return res.status(400).json({ error: true, message: checkError });
-    }
 
     // Validate email does not exist
     const checkUserEmail = await User.findOne({ email: email });
@@ -25,11 +17,6 @@ export const signup = async (req, res) => {
     const checkUserMobile = await User.findOne({ mobile: mobile });
     if (checkUserMobile) {
       error.push("Mobile number is already taken!");
-    }
-
-    // Validate correct blood group
-    if (!bloodGroupEnum.includes(bloodGroup)) {
-      error.push("Invalid Blood Group");
     }
 
     if (error.length > 0) {
@@ -114,29 +101,13 @@ export const updateProfile = async (req, res) => {
   try {
     const { name, email, bloodGroup } = req.body;
     const userResp = await User.findById(req.userId);
-    // Update name
-    if (name) {
-      userResp.name = name;
-    }
-    // update email
-    if (email) {
-      userResp.email = email;
-    }
-    // update blood group
-    if (bloodGroup) {
-      if (bloodGroupEnum.includes(bloodGroup)) {
-        userResp.bloodGroup = bloodGroup;
-      } else {
-        return res
-          .status(404)
-          .json({ error: true, message: "Invalid Blood Group!!" });
-      }
-    }
 
     if (!userResp) {
       return res.status(404).json({ error: true, message: "User not found!!" });
     }
-
+    userResp.name = name;
+    userResp.email = email;
+    userResp.bloodGroup = bloodGroup;
     await User.updateOne({ _id: req.userId }, userResp);
 
     res.status(200).json({ error: false, user: userResp });
@@ -149,6 +120,11 @@ export const updateUserPassword = async (req, res) => {
   try {
     const { oldPassword, newPassword } = req.body;
     const existingUser = await User.findById(req.userId);
+
+    if (!existingUser) {
+      return res.status(404).json({ error: true, message: "User not found!!" });
+    }
+
     const isPasswordCorrect = await bcrypt.compare(
       oldPassword,
       existingUser.password
@@ -158,11 +134,6 @@ export const updateUserPassword = async (req, res) => {
       return res
         .status(400)
         .json({ error: true, message: "Old password does not match" });
-    }
-
-    const checkError = signupEmailAndMobileValidator(newPassword, null);
-    if (checkError.length > 0) {
-      return res.status(400).json({ error: true, message: checkError });
     }
 
     const hashedPassword = await bcrypt.hash(newPassword, 12);

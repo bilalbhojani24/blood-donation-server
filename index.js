@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import UserRoutes from "./routes/user.js";
 import DonorRoutes from "./routes/donor.js";
+import ReceiverRoutes from "./routes/receiver.js";
 
 const app = express();
 dotenv.config();
@@ -14,6 +15,7 @@ app.use(cors());
 
 app.use("/user", UserRoutes);
 app.use("/donor", DonorRoutes);
+app.use("/receiver", ReceiverRoutes);
 // Test route
 app.get("/test", (req, res) => {
   res.send("Hello to Blood Donation!!");

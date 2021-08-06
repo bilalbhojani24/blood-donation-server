@@ -7,10 +7,9 @@ const auth = (req, res, next) => {
     req.userId = decodedData?.id;
     next();
   } catch (error) {
-    console.log(error);
     res.status(401).json({
       error: false,
-      message: error,
+      message: "Unauthenticated",
     });
   }
 };
