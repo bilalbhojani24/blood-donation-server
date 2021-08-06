@@ -5,6 +5,7 @@ import {
   DONOR_UPDATED,
   DONOR_FETCHED,
   DONOR_STATUS_CHANGE,
+  DONOR_NOT_FOUND,
 } from "../utils/constants.js";
 
 export const createDonor = async (req, res) => {
@@ -93,6 +94,23 @@ export const getDonors = async (req, res) => {
     res
       .status(200)
       .json({ error: false, message: DONOR_FETCHED, donor: respObject });
+  } catch (error) {
+    res.status(500).json({ error: true, donor: error });
+  }
+};
+
+export const singleDonor = async (req, res) => {
+  try {
+    const donorResp = await Donor.findOne({ user: req.userId });
+    if (!donorResp) {
+      return res.status(404).json({
+        error: true,
+        message: DONOR_NOT_FOUND,
+      });
+    }
+    res
+      .status(200)
+      .json({ error: false, message: DONOR_FETCHED, donor: donorResp });
   } catch (error) {
     res.status(500).json({ error: true, donor: error });
   }
