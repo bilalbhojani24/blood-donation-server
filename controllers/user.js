@@ -2,6 +2,10 @@ import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
+const accountSid = "ACc153c505cd29e16ad2c3c04f76360190";
+const authToken = "885acb373424b4b8d8320b173d382f35";
+const client = require("twilio")(accountSid, authToken);
+
 export const signup = async (req, res) => {
   try {
     const { name, email, mobile, password, bloodGroup } = req.body;
